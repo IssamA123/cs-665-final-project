@@ -21,7 +21,7 @@ applies different attribute weights to score and rank players from the squad poo
 clean and flexible design where lineup construction and player selection are fully decoupled.
 
 # GitHub Repository Link:
-https://github.com/IssamA123/cs-665-assignment-Final-Project
+https://github.com/IssamA123/cs-665-final-project
 
 # Implementation Description 
 
