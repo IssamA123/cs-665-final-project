@@ -1,13 +1,24 @@
 
 | CS-665       | Software Design & Patterns |
 |--------------|----------------------------|
-| Name         | FIRST_NAME LAST_NAME       |
-| Date         | MM/DD/YYYY                 |
-| Course       | Fall / Spring / Summer     |
-| Assignment # |                            |
+| Name         | Issam Alaga                |
+| Date         | 04/30/2026                 |
+| Course       | Spring CS665               |
+| Assignment # | Final Project              |
 
 # Assignment Overview
-Please add a paragraph or two overviewing the objectives of the assignment.
+For this project I chose to model a soccer lineup optimizer than a coach could realistically use to select the best
+starting eleven from a squad pool based on player attributes and tactical approach. The problem felt like a natural fit
+for design patterns, as it involves both complex object construction and interchangeable selection algorithms. This
+concept can be seen in video games like EA FIFA, as they use similar logic when offering a "pick best lineup" feature.
+Also, real professional clubs use data analytic platforms that score and rank players on weighted attributes to inform
+tactical decisions.
+
+The primary pattern studied independently for this assignment is the Builder pattern, used to construct the Lineup
+object step by step with enforced validation. The Strategy pattern, covered in class, supports the implementation by 
+encapsulating three interchangeable lineup selection algorithms: Attacking, Defensive, and Balanced. Each strategy
+applies different attribute weights to score and rank players from the squad pool. Together the two patterns produce a 
+clean and flexible design where lineup construction and player selection are fully decoupled.
 
 # GitHub Repository Link:
 https://github.com/{YOUR_USERNAME}/cs-665-assignment-{ASSIGNMENT_NUMBER}
@@ -17,13 +28,48 @@ https://github.com/{YOUR_USERNAME}/cs-665-assignment-{ASSIGNMENT_NUMBER}
 
 For each assignment, please answer the following:
 
-- Explain the level of flexibility in your implementation, including how new object types can
-be easily added or removed in the future.
+**- Explain the level of flexibility in your implementation, including how new object types can
+be easily added or removed in the future.**
+
+  - The implementation is designed to be easily extensible. New tactical strategies can be added by simply creating a
+    new class that implements the LineupStrategy interface, with no changes required to any existing classes. For example,
+    a PressingStrategy or CounterAttackStrategy could be introduced without touching LineupOptimizer, LineupBuilder, or
+    any of the existing strategies. Similarly, new formations can be added by adding a new constant to the Formation enum
+    with the appropriate position slot limits. New player attributes could also be added to the Player class and factored
+    into strategy scoring with minimal changes. The design follows the Open/Closed principle where the system is open for
+    extension but closed for modification.
+
 - Discuss the simplicity and understandability of your implementation, ensuring that it is
 easy for others to read and maintain.
+
+  - Each class has a clearly defined responsibility, making the codebase easy to navigate without needing to trace through
+    the entire system. The LineupBuilder's fluent API makes lineup construction read naturally, and loading squad data
+    from an external CSV file keeps Main.java clean and allows a different squad to be swapped in without touching any
+    Java code.
+  
 - Describe how you have avoided duplicated code and why it is important.
-- If applicable, mention any design patterns you have used and explain why they were
-chosen.
+
+    - The LineupStrategy interface ensures that all three strategies share a common method signature, avoiding any
+    duplicated conditional logic that would otherwise appear as a long if/else or switch statement. Each strategy
+    encapsulates its own scoring algorithm, meaning the selection logic is written once per strategy rather than repeated
+    across the codebase. Within each strategy, the selectByPosition() helper method handles position filtering and slot
+    limiting in one place, used across all position selections rather than duplicating that logic for each position slot.
+  
+- If applicable, mention any design patterns you have used and explain why they were chosen.
+    
+    - Two design patterns are used in this implementation. The Builder pattern was chosen to construct the Lineup object,
+    which has multiple required components including a formation, 11 starters, a bench, captain, and a tactic name.
+    Without Builder, constructing a lineup would require either a large constructor or scatters setter calls with no
+    enforcement of completeness. The build() method validates all required components before producing the final object,
+    ensuring a Lineup can never exist in an incomplete state.
+    
+    The Strategy pattern was chosen to encapsulate the three lineup selection algorithms. Without it, the selection logic,
+    would live in a single class with a switch statement that would need to be modified every time a new tactic was added.
+
+    It is important to note here that this implementation follows a variation of the Builder pattern where the builder exists
+    as a separate class rather than a static nested class inside Lineup. This was a deliberate decision, as nesting LineupBuilder
+    inside Lineup would make the code tightly coupled, and delegate numerous responsibilities to one class. The Lineup
+    constructor is package-private, ensuring that LineupBuilder remains the only way to construct a Lineup object.
 
 
 # Maven Commands
